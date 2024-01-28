@@ -1,34 +1,32 @@
-import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Button } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import Row from "react-bootstrap/Row";
+import { Link } from "react-router-dom";
 
-function Header() {
-    return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        <Typography
-                            variant="h5"
-                            noWrap
-                            component={Link}
-                            to="/"
-                            sx={{
-                                mr: 2,
-                                color: 'inherit',
-                                textDecoration: 'none',
-                            }}
-                        >
-                            React-Starter
-                        </Typography>
-                    </Typography>
-                    <Button color="inherit" variant="text" component={Link} to="/">
-                    Home
-                    </Button>
-
-                </Toolbar>
-            </AppBar>
-        </Box>
-    );
-}
+const Header = () => {
+  return (
+    <Container fluid>
+      <Row>
+        <Navbar bg="light" variant="light">
+          <Container className="justify-content-end">
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav>
+                <Link to="/">
+                  <Button variant="contained">Home</Button>
+                </Link>
+                <Link to="/countries">
+                  <Button variant="contained">Countries</Button>
+                </Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+      </Row>
+    </Container>
+  );
+};
 
 export default Header;
