@@ -20,6 +20,9 @@ const Header = () => {
                 <Link to="/countries">
                   <Button variant="contained">Countries</Button>
                 </Link>
+                <Link to="/favourites">
+                  <Button variant="contained">Favourites</Button>
+                </Link>
               </Nav>
             </Navbar.Collapse>
           </Container>
