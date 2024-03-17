@@ -1,6 +1,8 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
+//import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import { Spinner } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
@@ -42,10 +44,6 @@ const Countries = () => {
         {countriesList.map((country) => (
           <Col key={country.name.official} className="mt-5">
             <Card className="h-100">
-              <FavoriteIcon
-                color="red"
-                onClick={() => dispatch(addFavourite(country))}
-              />
               <Card.Img
                 variant="top"
                 className="rounded h-50"
@@ -57,7 +55,13 @@ const Countries = () => {
                 }}
               />
               <Card.Body className="d-flex flex-column">
-                <Card.Title>{country.name.common}</Card.Title>
+                <FavoriteIcon
+                  color="red"
+                  onClick={() => dispatch(addFavourite(country))}
+                />
+                <Link to={`/countries/${country.name.common}`}>
+                  <Card.Title>{country.name.common}</Card.Title>
+                </Link>
                 <Card.Subtitle className="mb-5 text-muted">
                   {country.name.official}
                 </Card.Subtitle>

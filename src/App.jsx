@@ -5,10 +5,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Countries from "./routes/Countries";
-import CountriesSingle from "./routes/CountriesSingle";
+import Country from "./routes/Country";
 import Favourites from "./routes/Favourites";
 import Home from "./routes/Home";
 import Root from "./routes/Root";
+import Register from "./routes/Register";
+import Login from "./routes/Login";
 import store from "./store/store";
 
 const theme = createTheme({
@@ -37,12 +39,20 @@ function App() {
           element: <Countries />,
         },
         {
-          path: "countries/:single",
-          element: <CountriesSingle />,
+          path: "countries/:name",
+          element: <Country />,
         },
         {
           path: "/favourites",
           element: <Favourites />,
+        },
+        {
+          path: "/register",
+          element: <Register />,
+        },
+        {
+          path: "/login",
+          element: <Login />,
         },
       ],
     },
