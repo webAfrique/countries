@@ -4,7 +4,6 @@ import { auth } from "../auth/firebase";
 
 const ProtectedRoutes = () => {
   const [user] = useAuthState(auth);
-  //const navigate = useNavigate();
   return user ? <Outlet /> : <Navigate to="/login" />;
 };
 

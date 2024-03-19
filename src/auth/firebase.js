@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword }  from 'firebase/auth'
-import { addDoc, collection, getFirestore } from 'firebase/firestore'
+import { addDoc, getDocs, collection, query, where, getFirestore } from 'firebase/firestore'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -22,6 +22,7 @@ export const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
 // Get access to the project database
 const db = getFirestore(app)
+
 
 const registerWithEmailAndPassword = async (name, email, password) => {
     try {
@@ -50,8 +51,15 @@ const loginWithEmailAndPassword = async(email, password) => {
 
 }
 
+const getUser = async(uid) => {
+    const q = query(collection(db, 'users'), where('uid', '==', uid))
+    const querySnapshot = await getDocs(q)
+    const user = querySnapshot.docs[0].data()
+    return user
+}
+
 const logout = () => {
     auth.signOut()
 }
 
-export { auth, db, registerWithEmailAndPassword, loginWithEmailAndPassword, logout }
+export { auth, db, registerWithEmailAndPassword, loginWithEmailAndPassword, getUser,logout }
