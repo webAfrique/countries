@@ -4,6 +4,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProtectedRoutes from "./routes/ProtectedRoutes";
 import Countries from "./routes/Countries";
 import Country from "./routes/Country";
 import Favourites from "./routes/Favourites";
@@ -36,11 +37,17 @@ function App() {
         },
         {
           path: "/countries",
-          element: <Countries />,
-        },
-        {
-          path: "countries/:name",
-          element: <Country />,
+          element: <ProtectedRoutes />,
+          children: [
+            {
+              path: "/countries",
+              element: <Countries />,
+            },
+            {
+              path: "/countries/:name",
+              element: <Country />,
+            },
+          ],
         },
         {
           path: "/favourites",
