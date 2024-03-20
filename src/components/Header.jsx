@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, getUser } from "../auth/firebase";
 
@@ -12,16 +13,13 @@ import { logout } from "../auth/firebase";
 
 const Header = () => {
   const [user] = useAuthState(auth);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
       const fetchUser = async () => {
         const userData = await getUser(user.uid);
-        if (!userData) {
-          setUsername(null);
-          return;
-        }
         setUsername(userData.name);
       };
       fetchUser();
@@ -56,7 +54,14 @@ const Header = () => {
                 ) : (
                   <>
                     <p>{username}</p>
-                    <Button onClick={logout}>Logout</Button>
+                    <Button
+                      onClick={() => {
+                        logout();
+                        navigate("/");
+                      }}
+                    >
+                      Logout
+                    </Button>
                   </>
                 )}
               </Nav>
