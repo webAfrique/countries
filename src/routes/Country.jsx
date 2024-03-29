@@ -1,21 +1,25 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { addFavourite, removeFavourite } from "../store/favouritesSlice";
 import { Container } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Spinner from "react-bootstrap/Spinner";
 import axios from "axios";
 
 const Country = () => {
+  const dispatch = useDispatch();
   const [weather, setWeather] = useState({});
   const [loading, setLoading] = useState(true);
   const { name } = useParams();
   const country = useSelector((state) =>
     state.countries.countries.find((country) => country.name.common === name)
   );
+  const favourites = useSelector((state) => state.favourites.favourites);
 
   useEffect(() => {
     axios
@@ -42,10 +46,23 @@ const Country = () => {
           }}
         />
         <Card.Body className="d-flex flex-column">
-          <FavoriteIcon
-            color="red"
-            onClick={() => dispatch(addFavourite(country))}
-          />
+          {favourites.some(
+            (favourite) => favourite.name?.common === country.name.common
+          ) ? (
+            <FavoriteIcon
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => dispatch(removeFavourite(country))}
+            />
+          ) : (
+            <FavoriteBorderIcon
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => dispatch(addFavourite(country))}
+            />
+          )}
           <Card.Title>{country.name.common}</Card.Title>
           <Card.Subtitle className="mb-5 text-muted">
             {country.name.official}

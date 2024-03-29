@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword }  from 'firebase/auth'
-import { addDoc, getDocs, collection, query, where, getFirestore } from 'firebase/firestore'
+import { addDoc, getDocs, doc, deleteDoc, collection, query, where, getFirestore } from 'firebase/firestore'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -19,12 +19,12 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 
 //Get access to the project authentication
-const auth = getAuth(app)
+export const auth = getAuth(app)
 // Get access to the project database
-const db = getFirestore(app)
+export const db = getFirestore(app)
 
 
-const registerWithEmailAndPassword = async (name, email, password) => {
+export const registerWithEmailAndPassword = async (name, email, password) => {
     try {
         const response = await createUserWithEmailAndPassword(auth, email, password)
         const user = response.user
@@ -40,7 +40,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     }
 }
 
-const loginWithEmailAndPassword = async(email, password) => {
+export const loginWithEmailAndPassword = async(email, password) => {
     try {
         await signInWithEmailAndPassword(auth, email, password)
 
@@ -51,15 +51,46 @@ const loginWithEmailAndPassword = async(email, password) => {
 
 }
 
-const getUser = async(uid) => {
+export const getUser = async(uid) => {
     const q = query(collection(db, 'users'), where('uid', '==', uid))
     const querySnapshot = await getDocs(q)
     const user = querySnapshot.docs[0].data()
     return user
 }
 
-const logout = () => {
+export const logout = () => {
     auth.signOut()
 }
 
-export { auth, db, registerWithEmailAndPassword, loginWithEmailAndPassword, getUser,logout }
+//function to add a country to the user's favourites
+export const addFavouriteToDb = async(uid, country) => {
+    await addDoc(collection(db, `users/${uid}/favourites`), {
+        uid,
+        country
+    })
+}
+
+//function to retrieve the user's favourites from the database
+export const getFavouritesFromDb = async(uid) => {
+    const q = query(collection(db, `users/${uid}/favourites`))
+    const querySnapshot = await getDocs(q)
+    const favourites = querySnapshot.docs.map(doc => doc.data().country)
+    return favourites
+}
+
+//function to remove a country from the user's favourites
+export const removeFavouriteFromDb = async(uid, country) => {
+   const q = query(collection(db, `users/${uid}/favourites`), where('country.name.common', '==', country.name.common))
+    const querySnapshot = await getDocs(q)
+    const docId = querySnapshot.docs[0].id
+    await deleteDoc(doc(db, `users/${uid}/favourites/${docId}`))
+}
+
+//function to clear all the user's favourites
+export const clearFavouritesFromDb = async(uid) => {
+    const q = query(collection(db, `users/${uid}/favourites`))
+    const querySnapshot = await getDocs(q)
+    querySnapshot.docs.forEach(async(doc) => {
+        await deleteDoc(doc.ref)
+    })
+}
