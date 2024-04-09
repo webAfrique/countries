@@ -32,7 +32,10 @@ const Header = () => {
           <Container className="justify-content-end">
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-              <Nav>
+              <Nav className="bg-red">
+                <Link to="/" style={{ textDecoration: "none" }}>
+                  <h4 style={{ color: "black" }}>Rest Countries</h4>
+                </Link>
                 <Link to="/">
                   <Button variant="contained">Home</Button>
                 </Link>
@@ -42,19 +45,15 @@ const Header = () => {
                 <Link to="/favourites">
                   <Button variant="contained">Favourites</Button>
                 </Link>
-                {!user ? (
+              </Nav>
+              <Nav style={{ marginLeft: "auto" }}>
+                {user ? (
                   <>
-                    <Link to="/login">
-                      <Button variant="contained">Login</Button>
+                    <Link to="/profile">
+                      <Button variant="contained">{username}</Button>
                     </Link>
-                    <Link to="/register">
-                      <Button variant="contained">Register</Button>
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    <p>{username}</p>
                     <Button
+                      variant="primary"
                       onClick={() => {
                         logout();
                         navigate("/");
@@ -62,6 +61,15 @@ const Header = () => {
                     >
                       Logout
                     </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/register">
+                      <Button variant="contained">Register</Button>
+                    </Link>
+                    <Link to="/login">
+                      <Button variant="contained">Login</Button>
+                    </Link>
                   </>
                 )}
               </Nav>
