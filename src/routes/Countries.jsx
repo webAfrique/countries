@@ -1,10 +1,10 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 //import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-import { Spinner } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
@@ -24,6 +24,7 @@ const Countries = () => {
   const countriesList = useSelector((state) => state.countries.countries);
   const loading = useSelector((state) => state.countries.isLoading);
   const favourites = useSelector((state) => state.favourites.favourites);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     dispatch(initializeCountries());
@@ -52,66 +53,81 @@ const Countries = () => {
 
   return (
     <Container fluid>
+      <Row>
+        <Form.Control
+          style={{ width: "18rem", margin: "10px 0 10px 10px" }}
+          type="search"
+          className="me-2 "
+          placeholder="Search countries"
+          aria-label="Search"
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </Row>
       <Row xs={2} md={3} lg={4} className=" g-3">
-        {countriesList.map((country) => (
-          <Col key={country.name.official} className="mt-5">
-            <Card className="h-100">
-              <Card.Img
-                variant="top"
-                className="rounded h-50"
-                src={country.flags.svg}
-                style={{
-                  objectFit: "cover",
-                  minHeight: "200px",
-                  maxHeight: "200px",
-                }}
-              />
-              <Card.Body className="d-flex flex-column">
-                {favourites.some(
-                  (favourite) => favourite.name?.common === country.name.common
-                ) ? (
-                  <FavoriteIcon
-                    style={{
-                      cursor: "pointer",
-                    }}
-                    onClick={() => dispatch(removeFavourite(country))}
-                  />
-                ) : (
-                  <FavoriteBorderIcon
-                    style={{
-                      cursor: "pointer",
-                    }}
-                    onClick={() => dispatch(addFavourite(country))}
-                  />
-                )}
-                <Link to={`/countries/${country.name.common}`}>
-                  <Card.Title>{country.name.common}</Card.Title>
-                </Link>
-                <Card.Subtitle className="mb-5 text-muted">
-                  {country.name.official}
-                </Card.Subtitle>
-                <ListGroup
-                  variant="flush"
-                  className="flex-grow-1 justify-content-end"
-                >
-                  <ListGroup.Item>
-                    <i className="bi bi-translate me-2"></i>
-                    {Object.values(country.languages ?? {}).join(", ")}
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <i className="bi bi-cash-coin me-2"></i>
-                    {Object.values(country.currencies || {})
-                      .map((currency) => currency.name)
-                      .join(", ")}
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    {country.population.toLocaleString()}
-                  </ListGroup.Item>
-                </ListGroup>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
+        {countriesList
+          .filter((country) =>
+            country.name.common.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((country) => (
+            <Col key={country.name.official} className="mt-5">
+              <Card className="h-100">
+                <Card.Img
+                  variant="top"
+                  className="rounded h-50"
+                  src={country.flags.svg}
+                  style={{
+                    objectFit: "cover",
+                    minHeight: "200px",
+                    maxHeight: "200px",
+                  }}
+                />
+                <Card.Body className="d-flex flex-column">
+                  {favourites.some(
+                    (favourite) =>
+                      favourite.name?.common === country.name.common
+                  ) ? (
+                    <FavoriteIcon
+                      style={{
+                        cursor: "pointer",
+                      }}
+                      onClick={() => dispatch(removeFavourite(country))}
+                    />
+                  ) : (
+                    <FavoriteBorderIcon
+                      style={{
+                        cursor: "pointer",
+                      }}
+                      onClick={() => dispatch(addFavourite(country))}
+                    />
+                  )}
+                  <Link to={`/countries/${country.name.common}`}>
+                    <Card.Title>{country.name.common}</Card.Title>
+                  </Link>
+                  <Card.Subtitle className="mb-5 text-muted">
+                    {country.name.official}
+                  </Card.Subtitle>
+                  <ListGroup
+                    variant="flush"
+                    className="flex-grow-1 justify-content-end"
+                  >
+                    <ListGroup.Item>
+                      <i className="bi bi-translate me-2"></i>
+                      {Object.values(country.languages ?? {}).join(", ")}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <i className="bi bi-cash-coin me-2"></i>
+                      {Object.values(country.currencies || {})
+                        .map((currency) => currency.name)
+                        .join(", ")}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      {country.population.toLocaleString()}
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
       </Row>
     </Container>
   );
