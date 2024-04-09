@@ -55,7 +55,7 @@ const Countries = () => {
     <Container fluid>
       <Row>
         <Form.Control
-          style={{ width: "18rem", margin: "10px 0 10px 10px" }}
+          style={{ width: "18rem", margin: "100px 0 10px 10px" }}
           type="search"
           className="me-2 "
           placeholder="Search countries"

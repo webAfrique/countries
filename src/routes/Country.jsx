@@ -27,14 +27,14 @@ const Country = () => {
         `https://api.openweathermap.org/data/2.5/weather?lat=${country.latlng[0]}&lon=${country.latlng[1]}&appid=6165bc8c579eaab143498842bc768692`
       )
       .then((response) => {
-        setWeather(response.data.main);
+        setWeather(response.data);
         setLoading(false);
       });
-  }, [weather]);
+  }, []);
 
   return (
     <Container>
-      <Card className="h-100">
+      <Card className="h-100 w-60">
         <Card.Img
           variant="top"
           className="rounded h-50"
@@ -46,24 +46,28 @@ const Country = () => {
           }}
         />
         <Card.Body className="d-flex flex-column">
-          {favourites.some(
-            (favourite) => favourite.name?.common === country.name.common
-          ) ? (
-            <FavoriteIcon
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={() => dispatch(removeFavourite(country))}
-            />
-          ) : (
-            <FavoriteBorderIcon
-              style={{
-                cursor: "pointer",
-              }}
-              onClick={() => dispatch(addFavourite(country))}
-            />
-          )}
-          <Card.Title>{country.name.common}</Card.Title>
+          <Card.Title>
+            {country.name.common}
+            {favourites.some(
+              (favourite) => favourite.name?.common === country.name.common
+            ) ? (
+              <FavoriteIcon
+                style={{
+                  cursor: "pointer",
+                  marginLeft: "10px",
+                }}
+                onClick={() => dispatch(removeFavourite(country))}
+              />
+            ) : (
+              <FavoriteBorderIcon
+                style={{
+                  cursor: "pointer",
+                  marginLeft: "10px",
+                }}
+                onClick={() => dispatch(addFavourite(country))}
+              />
+            )}
+          </Card.Title>
           <Card.Subtitle className="mb-5 text-muted">
             {country.name.official}
           </Card.Subtitle>
@@ -71,6 +75,10 @@ const Country = () => {
             variant="flush"
             className="flex-grow-1 justify-content-end"
           >
+            <ListGroup.Item>
+              <i className="bi bi-translate me-2"></i>
+              Capital : {country.capital[0]}
+            </ListGroup.Item>
             <ListGroup.Item>
               <i className="bi bi-translate me-2"></i>
               {Object.values(country.languages ?? {}).join(", ")}
@@ -84,24 +92,29 @@ const Country = () => {
             <ListGroup.Item>
               {country.population.toLocaleString()}
             </ListGroup.Item>
+            {loading ? (
+              <Col className="text-center m-5">
+                <Spinner
+                  animation="border"
+                  role="status"
+                  className="center"
+                  variant="info"
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </Col>
+            ) : (
+              <ListGroup.Item>
+                <Card.Text>
+                  {`Weather : ${(weather.main.temp - 273.15).toFixed(
+                    1
+                  )}°C, humidity ${weather.main.humidity}%, wind ${
+                    weather.wind.speed
+                  } m/s, `}
+                </Card.Text>
+              </ListGroup.Item>
+            )}
           </ListGroup>
-
-          {loading ? (
-            <Col className="text-center m-5">
-              <Spinner
-                animation="border"
-                role="status"
-                className="center"
-                variant="info"
-              >
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </Col>
-          ) : (
-            <Card.Text>
-              Temperature: {(weather.temp - 273.15).toFixed(1)} degrees
-            </Card.Text>
-          )}
         </Card.Body>
       </Card>
     </Container>

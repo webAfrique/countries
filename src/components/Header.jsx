@@ -26,16 +26,13 @@ const Header = () => {
     }
   }, [user]);
   return (
-    <Container fluid>
+    <Container fluid style={{ position: "fixed", zIndex: "1" }}>
       <Row>
         <Navbar bg="light" variant="light">
           <Container className="justify-content-end">
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="bg-red">
-                <Link to="/" style={{ textDecoration: "none" }}>
-                  <h4 style={{ color: "black" }}>Rest Countries</h4>
-                </Link>
                 <Link to="/">
                   <Button variant="contained">Home</Button>
                 </Link>
